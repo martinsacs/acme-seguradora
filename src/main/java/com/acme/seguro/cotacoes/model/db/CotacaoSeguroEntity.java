@@ -1,6 +1,5 @@
 package com.acme.seguro.cotacoes.model.db;
 
-import com.acme.seguro.cotacoes.model.Customer;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,12 +9,12 @@ import java.util.Optional;
 
 @Entity
 @Data
-public class CotacaoSeguro {
+public class CotacaoSeguroEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Optional<Long> insurancePolicyId;
+    private Long insurancePolicyId;
 
     private String productId;
 
@@ -28,15 +27,14 @@ public class CotacaoSeguro {
     private BigDecimal totalCoverageAmount;
 
     @OneToMany
-    private List<CoberturaDb> coverages;
+    private List<CoberturaEntity> coverages;
 
     private List<String> assistances;
 
-    //@OneToOne - ENTIDADE 'CUSTOMER' NÃO SERÁ CRIADA NESTA ENTREGA
-    private Customer customer;
+    @OneToOne
+    private CustomerEntity customer;
 
-
-    public CotacaoSeguro(String productId, String offerId, String category, BigDecimal totalMonthlyPremiumAmount, BigDecimal totalCoverageAmount, List<CoberturaDb> coverages, List<String> assistances, Customer customer) {
+    public CotacaoSeguroEntity(String productId, String offerId, String category, BigDecimal totalMonthlyPremiumAmount, BigDecimal totalCoverageAmount, List<CoberturaEntity> coverages, List<String> assistances, CustomerEntity customer) {
         this.productId = productId;
         this.offerId = offerId;
         this.category = category;
@@ -45,5 +43,9 @@ public class CotacaoSeguro {
         this.coverages = coverages;
         this.assistances = assistances;
         this.customer = customer;
+    }
+
+    public CotacaoSeguroEntity() {
+
     }
 }

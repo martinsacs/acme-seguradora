@@ -1,21 +1,23 @@
 package com.acme.seguro.cotacoes.config;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.db.CoberturaDb;
+import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,24 +26,28 @@ public class ConsultaCatalogoMockServerConfig {
 
     private WireMockServer wireMockServer;
 
-    @PostConstruct
+    //@PostConstruct
+    @Bean
     public void startServer() throws JsonProcessingException {
-        wireMockServer = new WireMockServer(8081);
-        wireMockServer.start();
+       wireMockServer = new WireMockServer(8081);
+       wireMockServer.start();
 
         WireMock.configureFor("localhost", 8081);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
         WireMock.stubFor(WireMock.get("/v1/consulta-produto/.*")
             .willReturn(WireMock.aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody(new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(generateMockObjetoConsultaProduto()))));
+            .withBody(objectMapper.writer().withDefaultPrettyPrinter().writeValueAsString(generateMockObjetoConsultaProduto()))));
 
         WireMock.stubFor(WireMock.get("/v1/consulta-oferta")
             .willReturn(WireMock.aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
-            .withBody(new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(generateMockObjetoConsultaOferta()))));
+            .withBody(objectMapper.writer().withDefaultPrettyPrinter().writeValueAsString(generateMockObjetoConsultaOferta()))));
     }
 
     @PreDestroy
@@ -60,7 +66,7 @@ public class ConsultaCatalogoMockServerConfig {
             setId("1b2da7cc-b367-4196-8a78-9cfeec21f587");
             setName("Seguro de Vida");
             setActive(true);
-            setCreatedAt(LocalDateTime.of(2021, 7, 1, 0, 0, 0));
+            setCreatedAt(Timestamp.from(OffsetDateTime.parse("2021-07-01T00:00:00Z").toInstant()));
             setOffers(generateOffers());
         }};
     }
@@ -77,7 +83,7 @@ public class ConsultaCatalogoMockServerConfig {
         consultaOfertaOutput.setId("adc56d77-348c-4bf0-908f-22d402ee715c");
         consultaOfertaOutput.setProductId("1b2da7cc-b367-4196-8a78-9cfeec21f587");
         consultaOfertaOutput.setName("Seguro de Vida Familiar");
-        consultaOfertaOutput.setCreatedAt(LocalDateTime.of(2021,07,01, 00, 00, 00));
+        consultaOfertaOutput.setCreatedAt(Timestamp.from(OffsetDateTime.parse("2021-07-01T00:00:00Z").toInstant()));
         consultaOfertaOutput.setActive(true);
         consultaOfertaOutput.setCoverages(generateCoverages());
         consultaOfertaOutput.setAssistances(generateAssistances());
@@ -97,12 +103,12 @@ public class ConsultaCatalogoMockServerConfig {
         }};
     }
 
-    private static List<CoberturaDb> generateCoverages() {
+    private static List<CoberturaEntity> generateCoverages() {
         return List.of(
-                new CoberturaDb("Incêndio", BigDecimal.valueOf(500_000.00)),
-                new CoberturaDb("Desastres naturais", BigDecimal.valueOf(600_000.00)),
-                new CoberturaDb("Responsabilidade civil", BigDecimal.valueOf(80_000.00)),
-                new CoberturaDb("Roubo", BigDecimal.valueOf(100_000.00))
+                new CoberturaEntity("Incêndio", BigDecimal.valueOf(500_000.00)),
+                new CoberturaEntity("Desastres naturais", BigDecimal.valueOf(600_000.00)),
+                new CoberturaEntity("Responsabilidade civil", BigDecimal.valueOf(80_000.00)),
+                new CoberturaEntity("Roubo", BigDecimal.valueOf(100_000.00))
         );
     }
 

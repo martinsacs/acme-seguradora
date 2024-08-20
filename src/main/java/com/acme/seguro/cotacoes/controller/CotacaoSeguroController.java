@@ -1,6 +1,6 @@
 package com.acme.seguro.cotacoes.controller;
 
-import com.acme.seguro.cotacoes.model.db.CotacaoSeguro;
+import com.acme.seguro.cotacoes.model.db.CotacaoSeguroEntity;
 import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacaoInput;
 import com.acme.seguro.cotacoes.repository.CotacaoSeguroRepository;
 import com.acme.seguro.cotacoes.service.CotacaoService;
@@ -37,15 +37,15 @@ public class CotacaoSeguroController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CotacaoSeguro> consultarCotacao(@PathVariable Long id) {
-        Optional<CotacaoSeguro> cotacao = cotacaoSeguroRepository.findById(id);
+    public ResponseEntity<CotacaoSeguroEntity> consultarCotacao(@PathVariable Long id) {
+        Optional<CotacaoSeguroEntity> cotacao = cotacaoSeguroRepository.findById(id);
         return cotacao.isPresent() ? ResponseEntity.ok().body(cotacao.get()) : ResponseEntity.noContent().build();
 
     }
 
     @GetMapping
-    public ResponseEntity<List<CotacaoSeguro>> consultarCotacoes() {
-        List<CotacaoSeguro> cotacoes = cotacaoSeguroRepository.findAll();
-        return cotacoes.isEmpty() ? ResponseEntity.noContent().build() : new ResponseEntity<List<CotacaoSeguro>>(cotacoes, HttpStatus.OK);
+    public ResponseEntity<List<CotacaoSeguroEntity>> consultarCotacoes() {
+        List<CotacaoSeguroEntity> cotacoes = cotacaoSeguroRepository.findAll();
+        return cotacoes.isEmpty() ? ResponseEntity.noContent().build() : new ResponseEntity<List<CotacaoSeguroEntity>>(cotacoes, HttpStatus.OK);
     }
 }

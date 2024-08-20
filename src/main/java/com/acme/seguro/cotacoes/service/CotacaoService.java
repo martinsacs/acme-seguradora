@@ -1,8 +1,8 @@
 package com.acme.seguro.cotacoes.service;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.db.CoberturaDb;
-import com.acme.seguro.cotacoes.model.db.CotacaoSeguro;
+import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
+import com.acme.seguro.cotacoes.model.db.CotacaoSeguroEntity;
 import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacaoInput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
@@ -36,7 +36,7 @@ public class CotacaoService {
                 Map<String, Integer> validationResult = validarSolicitacao(solicitacao, responseOferta);
 
                 if (validationResult.containsValue(200)) {
-                    ResponseEntity<CotacaoSeguro> response = persistirBanco(solicitacao, uriBuilder);
+                    ResponseEntity<CotacaoSeguroEntity> response = persistirBanco(solicitacao, uriBuilder);
 
                     // postar no kafka
                     return response;
@@ -68,12 +68,12 @@ public class CotacaoService {
         }
 
         if (!valoresPremioMensalValidos(solicitacao.getTotalMonthlyPremiumAmount(), responseOferta.getBody().getMonthlyPremiumAmount())) {
-            result.put("ERRO: Valores de prêmio não compatíveis com a oferta.", HttpStatusCode.valueOf(200).value());
+            result.put("ERRO: Valores de prêmio não compatíveis com a oferta.", BAD_REQUEST.value());
             return result;
         }
 
         if (!valorTotalCoberturasValido(solicitacao.getCoverages(), solicitacao.getTotalCoverageAmount())) {
-            result.put("ERRO: A soma dos valores de cobertura não corresponde ao valor total informado.", HttpStatusCode.valueOf(500).value());
+            result.put("ERRO: A soma dos valores de cobertura não corresponde ao valor total informado.", BAD_REQUEST.value());
             return result;
         }
 
@@ -89,9 +89,9 @@ public class CotacaoService {
                 responseOferta.getBody().getActive();
     }
 
-    private static boolean coberturasValidas(List<CoberturaDb> coberturaEsperada, List<CoberturaDb> coberturaReal) {
-        for (CoberturaDb cobertura : coberturaEsperada) {
-            CoberturaDb coberturaCorrespondente = coberturaReal.stream()
+    private static boolean coberturasValidas(List<CoberturaEntity> coberturaEsperada, List<CoberturaEntity> coberturaReal) {
+        for (CoberturaEntity cobertura : coberturaEsperada) {
+            CoberturaEntity coberturaCorrespondente = coberturaReal.stream()
                     .filter(c -> c.getDescricao().equals(cobertura.getDescricao()))
                     .findFirst()
                     .orElse(null);
@@ -120,29 +120,29 @@ public class CotacaoService {
                 valoresOferta.getMaxAmount().compareTo(valoresCotacao) == 1;
     }
 
-    private static boolean valorTotalCoberturasValido(List<CoberturaDb> coverages, BigDecimal totalCoverageAmount) {
+    private static boolean valorTotalCoberturasValido(List<CoberturaEntity> coverages, BigDecimal totalCoverageAmount) {
         return somarValores(coverages).compareTo(totalCoverageAmount) == 0;
     }
-    public static BigDecimal somarValores(List<CoberturaDb> coberturas) {
+    public static BigDecimal somarValores(List<CoberturaEntity> coberturas) {
         BigDecimal soma = BigDecimal.ZERO;
 
-        for(CoberturaDb cobertura : coberturas) {
+        for(CoberturaEntity cobertura : coberturas) {
             soma.add(cobertura.getValor());
         }
 
         return soma;
     }
 
-    private ResponseEntity<CotacaoSeguro> persistirBanco(SolicitacaoCotacaoInput solicitacao, UriComponentsBuilder uriBuilder) {
-        CotacaoSeguro cotacao = deParaSolicitacaoCotacaoDb(solicitacao);
+    private ResponseEntity<CotacaoSeguroEntity> persistirBanco(SolicitacaoCotacaoInput solicitacao, UriComponentsBuilder uriBuilder) {
+        CotacaoSeguroEntity cotacao = deParaSolicitacaoCotacaoDb(solicitacao);
         cotacaoSeguroRepository.save(cotacao);
 
         URI uri = uriBuilder.path("/solicitacoes-cotacao/{id}").buildAndExpand(cotacao.getId()).toUri();
         return ResponseEntity.created(uri).body(cotacao);
     }
 
-    private CotacaoSeguro deParaSolicitacaoCotacaoDb(SolicitacaoCotacaoInput solicitacao) {
-        return new CotacaoSeguro(solicitacao.getProductId(), solicitacao.getOfferId(),
+    private CotacaoSeguroEntity deParaSolicitacaoCotacaoDb(SolicitacaoCotacaoInput solicitacao) {
+        return new CotacaoSeguroEntity(solicitacao.getProductId(), solicitacao.getOfferId(),
                 solicitacao.getCategory(), solicitacao.getTotalMonthlyPremiumAmount(),
                 solicitacao.getTotalCoverageAmount(), solicitacao.getCoverages(),
                 solicitacao.getAssistances(), solicitacao.getCustomer());

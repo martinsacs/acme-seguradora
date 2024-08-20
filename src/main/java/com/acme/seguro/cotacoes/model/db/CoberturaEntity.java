@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Data
-public class CoberturaDb {
+public class CoberturaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +19,7 @@ public class CoberturaDb {
 
     private BigDecimal valor;
 
-    public CoberturaDb(String descricao, BigDecimal valor) {
+    public CoberturaEntity(String descricao, BigDecimal valor) {
         this.descricao = descricao;
         this.valor = valor;
     }

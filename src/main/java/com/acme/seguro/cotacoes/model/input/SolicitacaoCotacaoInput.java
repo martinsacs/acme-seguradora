@@ -1,12 +1,12 @@
 package com.acme.seguro.cotacoes.model.input;
 
-import com.acme.seguro.cotacoes.model.Customer;
-import com.acme.seguro.cotacoes.model.db.CoberturaDb;
+import com.acme.seguro.cotacoes.model.db.CustomerEntity;
+import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +21,10 @@ public class SolicitacaoCotacaoInput {
     private String category;
 
     @JsonProperty("created_at")
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @JsonProperty("updated_at")
-    private Optional<LocalDateTime> updatedAt;
+    private Optional<Timestamp> updatedAt;
 
     @JsonProperty("total_monthly_premium_amount")
     private BigDecimal totalMonthlyPremiumAmount;
@@ -33,9 +33,9 @@ public class SolicitacaoCotacaoInput {
     private BigDecimal totalCoverageAmount;
 
     @JsonProperty("coverages")
-    private List<CoberturaDb> coverages;
+    private List<CoberturaEntity> coverages;
 
     private List<String> assistances;
 
-    private Customer customer;
+    private CustomerEntity customer;
 }

@@ -1,11 +1,11 @@
 package com.acme.seguro.cotacoes.model.output.mock;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.db.CoberturaDb;
+import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -18,11 +18,11 @@ public class ConsultaOfertaOutput {
     private String name;
 
     @JsonProperty("created_at")
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     private Boolean active;
 
-    private List<CoberturaDb> coverages;
+    private List<CoberturaEntity> coverages;
 
     private List<String> assistances;
 

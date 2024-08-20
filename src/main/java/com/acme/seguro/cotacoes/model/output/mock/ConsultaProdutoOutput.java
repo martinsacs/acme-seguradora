@@ -2,8 +2,7 @@ package com.acme.seguro.cotacoes.model.output.mock;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -12,7 +11,7 @@ public class ConsultaProdutoOutput {
     private String name;
 
     @JsonProperty("created_at")
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     private Boolean active;
 

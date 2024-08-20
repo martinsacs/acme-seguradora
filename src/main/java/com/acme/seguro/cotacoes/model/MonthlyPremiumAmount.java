@@ -15,4 +15,13 @@ public class MonthlyPremiumAmount {
 
     @JsonProperty("suggested_amount")
     private BigDecimal suggestedAmount;
+
+    public MonthlyPremiumAmount(BigDecimal maxAmount, BigDecimal minAmount, BigDecimal suggestedAmount) {
+        this.maxAmount = maxAmount;
+        this.minAmount = minAmount;
+        this.suggestedAmount = suggestedAmount;
+    }
+
+    public MonthlyPremiumAmount() {
+    }
 }
