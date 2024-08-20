@@ -1,4 +1,4 @@
-package com.acme.seguro.cotacoes.model.output;
+package com.acme.seguro.cotacoes.model.output.mock;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

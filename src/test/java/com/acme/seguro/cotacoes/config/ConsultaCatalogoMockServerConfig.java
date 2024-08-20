@@ -2,8 +2,8 @@ package com.acme.seguro.cotacoes.config;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
 import com.acme.seguro.cotacoes.model.db.CoberturaDb;
-import com.acme.seguro.cotacoes.model.output.ConsultaOfertaOutput;
-import com.acme.seguro.cotacoes.model.output.ConsultaProdutoOutput;
+import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
+import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;

@@ -1,4 +1,4 @@
-package com.acme.seguro.cotacoes.model.output;
+package com.acme.seguro.cotacoes.model.output.mock;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
 import com.acme.seguro.cotacoes.model.db.CoberturaDb;
