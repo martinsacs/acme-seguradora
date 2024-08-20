@@ -21,6 +21,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+
 @Configuration
 public class ConsultaCatalogoMockServerConfig {
 
@@ -36,13 +38,13 @@ public class ConsultaCatalogoMockServerConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
-        WireMock.stubFor(WireMock.get("/v1/consulta-produto/.*")
+        WireMock.stubFor(WireMock.get(urlPathMatching("/v1/consulta-produto/[a-zA-Z0-9-]+"))
             .willReturn(WireMock.aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
             .withBody(objectMapper.writer().withDefaultPrettyPrinter().writeValueAsString(generateMockObjetoConsultaProduto()))));
 
-        WireMock.stubFor(WireMock.get("/v1/consulta-oferta")
+        WireMock.stubFor(WireMock.get(urlPathMatching("/v1/consulta-oferta/[a-zA-Z0-9-]+"))
             .willReturn(WireMock.aResponse()
             .withStatus(200)
             .withHeader("Content-Type", "application/json")
