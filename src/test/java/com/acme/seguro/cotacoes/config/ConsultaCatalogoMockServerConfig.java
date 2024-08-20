@@ -26,8 +26,7 @@ public class ConsultaCatalogoMockServerConfig {
 
     private WireMockServer wireMockServer;
 
-    //@PostConstruct
-    @Bean
+    @PostConstruct
     public void startServer() throws JsonProcessingException {
        wireMockServer = new WireMockServer(8081);
        wireMockServer.start();
@@ -103,7 +102,7 @@ public class ConsultaCatalogoMockServerConfig {
         }};
     }
 
-    private static List<CoberturaEntity> generateCoverages() {
+    public static List<CoberturaEntity> generateCoverages() {
         return List.of(
                 new CoberturaEntity("Incêndio", BigDecimal.valueOf(500_000.00)),
                 new CoberturaEntity("Desastres naturais", BigDecimal.valueOf(600_000.00)),

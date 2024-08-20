@@ -20,7 +20,7 @@ public class ConsultaCatalogoMockServerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    /*@Test
+    @Test
     public void testMockServerConsultaProdutoResponse() throws JsonProcessingException {
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8081/v1/consulta-catalogo", String.class);
         assertThat(response.getBody()).isEqualTo(new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(generateMockObjetoConsultaProduto()));
@@ -30,5 +30,5 @@ public class ConsultaCatalogoMockServerTest {
     public void testMockServerConsultaOfertaResponse() throws JsonProcessingException {
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8081/v1/consulta-oferta", String.class);
         assertThat(response.getBody()).isEqualTo(new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(generateMockObjetoConsultaOferta()));
-    }*/
+    }
 }
