@@ -1,12 +1,19 @@
 package com.acme.seguro.cotacoes.controller;
 
-import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacao;
-import com.acme.seguro.cotacoes.model.output.ConsultaCotacao;
+import com.acme.seguro.cotacoes.model.db.CotacaoSeguro;
+import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacaoInput;
+import com.acme.seguro.cotacoes.repository.CotacaoSeguroRepository;
 import com.acme.seguro.cotacoes.service.CotacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @ResponseBody
@@ -15,17 +22,30 @@ public class CotacaoSeguroController {
     @Autowired
     private CotacaoService cotacaoService;
 
-    @PostMapping
-    public ResponseEntity solicitarCotacao(@RequestBody @Valid SolicitacaoCotacao solicitacaoCotacao) {
-        ResponseEntity<String> response = cotacaoService.cotar(solicitacaoCotacao);
+    @Autowired
+    private CotacaoSeguroRepository cotacaoSeguroRepository;
 
-        return null;
+    @PostMapping
+    public ResponseEntity<String> solicitarCotacao(@RequestBody @Valid SolicitacaoCotacaoInput solicitacaoCotacaoInput, UriComponentsBuilder uriBuilder) {
+        try {
+            ResponseEntity<String> response = cotacaoService.cotar(solicitacaoCotacaoInput, uriBuilder);
+            return response;
+        } catch(Exception ex) {
+            System.out.println("Ocorreu um erro ao solicitar cotação. " + ex.getMessage());
+            return new ResponseEntity<>("Ocorreu um erro no processamento.", HttpStatusCode.valueOf(500));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity consultarCotacao(@PathVariable Long id) {
-        ResponseEntity<ConsultaCotacao> response = cotacaoService.consultar(id);
+    public ResponseEntity<CotacaoSeguro> consultarCotacao(@PathVariable Long id) {
+        Optional<CotacaoSeguro> cotacao = cotacaoSeguroRepository.findById(id);
+        return cotacao.isPresent() ? ResponseEntity.ok().body(cotacao.get()) : ResponseEntity.noContent().build();
 
-        return null;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CotacaoSeguro>> consultarCotacoes() {
+        List<CotacaoSeguro> cotacoes = cotacaoSeguroRepository.findAll();
+        return cotacoes.isEmpty() ? ResponseEntity.noContent().build() : new ResponseEntity<List<CotacaoSeguro>>(cotacoes, HttpStatus.OK);
     }
 }

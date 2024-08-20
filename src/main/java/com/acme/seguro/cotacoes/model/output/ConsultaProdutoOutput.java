@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class ConsultaProduto {
+public class ConsultaProdutoOutput {
     private String id;
     private String name;
 

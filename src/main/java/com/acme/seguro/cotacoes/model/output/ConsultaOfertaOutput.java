@@ -1,16 +1,15 @@
 package com.acme.seguro.cotacoes.model.output;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
+import com.acme.seguro.cotacoes.model.db.CoberturaDb;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.math.BigDecimal;
-import java.util.Map;
 
 @Data
-public class ConsultaOferta {
+public class ConsultaOfertaOutput {
     private String id;
 
     @JsonProperty("product_id")
@@ -23,7 +22,7 @@ public class ConsultaOferta {
 
     private Boolean active;
 
-    private Map<String, BigDecimal> coverages;
+    private List<CoberturaDb> coverages;
 
     private List<String> assistances;
 

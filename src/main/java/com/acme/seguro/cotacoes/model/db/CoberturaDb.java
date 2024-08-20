@@ -1,18 +1,16 @@
 package com.acme.seguro.cotacoes.model.db;
 
-import com.acme.seguro.cotacoes.model.Customer;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Entity
-public class Cobertura {
+@Data
+public class CoberturaDb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,4 +18,9 @@ public class Cobertura {
     private String descricao;
 
     private BigDecimal valor;
+
+    public CoberturaDb(String descricao, BigDecimal valor) {
+        this.descricao = descricao;
+        this.valor = valor;
+    }
 }

@@ -1,8 +1,9 @@
 package com.acme.seguro.cotacoes.config;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.output.ConsultaOferta;
-import com.acme.seguro.cotacoes.model.output.ConsultaProduto;
+import com.acme.seguro.cotacoes.model.db.CoberturaDb;
+import com.acme.seguro.cotacoes.model.output.ConsultaOfertaOutput;
+import com.acme.seguro.cotacoes.model.output.ConsultaProdutoOutput;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -17,7 +18,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 public class ConsultaCatalogoMockServerConfig {
@@ -51,12 +51,12 @@ public class ConsultaCatalogoMockServerConfig {
         }
     }
 
-    public static ResponseEntity<ConsultaProduto> mockResponseEntity(ConsultaProduto body, HttpStatus status) {
+    public static ResponseEntity<ConsultaProdutoOutput> mockResponseEntity(ConsultaProdutoOutput body, HttpStatus status) {
         return new ResponseEntity<>(body, status);
     }
 
-    public static ConsultaProduto generateMockObjetoConsultaProduto() {
-        return new ConsultaProduto() {{
+    public static ConsultaProdutoOutput generateMockObjetoConsultaProduto() {
+        return new ConsultaProdutoOutput() {{
             setId("1b2da7cc-b367-4196-8a78-9cfeec21f587");
             setName("Seguro de Vida");
             setActive(true);
@@ -72,17 +72,17 @@ public class ConsultaCatalogoMockServerConfig {
             "cdc56d77-348c-4bf0-908f-22d402ee715c"));
 
     }
-    public static ConsultaOferta generateMockObjetoConsultaOferta() {
-        ConsultaOferta consultaOferta = new ConsultaOferta();
-        consultaOferta.setId("adc56d77-348c-4bf0-908f-22d402ee715c");
-        consultaOferta.setProductId("1b2da7cc-b367-4196-8a78-9cfeec21f587");
-        consultaOferta.setName("Seguro de Vida Familiar");
-        consultaOferta.setCreatedAt(LocalDateTime.of(2021,07,01, 00, 00, 00));
-        consultaOferta.setActive(true);
-        consultaOferta.setCoverages(generateCoverages());
-        consultaOferta.setAssistances(generateAssistances());
-        consultaOferta.setMonthlyPremiumAmount(generateMonthlyPremiumAmount());
-        return consultaOferta;
+    public static ConsultaOfertaOutput generateMockObjetoConsultaOferta() {
+        ConsultaOfertaOutput consultaOfertaOutput = new ConsultaOfertaOutput();
+        consultaOfertaOutput.setId("adc56d77-348c-4bf0-908f-22d402ee715c");
+        consultaOfertaOutput.setProductId("1b2da7cc-b367-4196-8a78-9cfeec21f587");
+        consultaOfertaOutput.setName("Seguro de Vida Familiar");
+        consultaOfertaOutput.setCreatedAt(LocalDateTime.of(2021,07,01, 00, 00, 00));
+        consultaOfertaOutput.setActive(true);
+        consultaOfertaOutput.setCoverages(generateCoverages());
+        consultaOfertaOutput.setAssistances(generateAssistances());
+        consultaOfertaOutput.setMonthlyPremiumAmount(generateMonthlyPremiumAmount());
+        return consultaOfertaOutput;
     }
 
     private static List<String> generateAssistances() {
@@ -97,12 +97,13 @@ public class ConsultaCatalogoMockServerConfig {
         }};
     }
 
-    private static Map<String, BigDecimal> generateCoverages() {
-        return Map.of(
-            "Incêndio", BigDecimal.valueOf(500_000.00),
-            "Desastres naturais", BigDecimal.valueOf(600_000.00),
-            "Responsabilidade civil", BigDecimal.valueOf(80_000.00),
-            "Roubo", BigDecimal.valueOf(100_000.00)
+    private static List<CoberturaDb> generateCoverages() {
+        return List.of(
+                new CoberturaDb("Incêndio", BigDecimal.valueOf(500_000.00)),
+                new CoberturaDb("Desastres naturais", BigDecimal.valueOf(600_000.00)),
+                new CoberturaDb("Responsabilidade civil", BigDecimal.valueOf(80_000.00)),
+                new CoberturaDb("Roubo", BigDecimal.valueOf(100_000.00))
         );
     }
+
 }
