@@ -114,7 +114,7 @@ Classe de testes unitários para `CotacaoService`. Inclui testes para validar di
 #### `ConsultaCatalogoServiceIntegrationTest`
 Classe de testes de integração para `ConsultaCatalogoService`. Utiliza WireMock para simular respostas de APIs externas e validar a integração dos serviços.
 
-## Configuração e Execução dos Testes
+## Configuração e execução
 
 ### Pré-requisitos
 - Java 11 ou superior
@@ -135,7 +135,12 @@ cd acme-seguradora
 maven clean install
 ```
 
-4. Digite a instrução abaixo para executar a aplicação:
+4. Digite a instrução abaixo para executar os testes unitários:
+```
+mvn test
+```
+
+5. Digite a instrução abaixo para executar a aplicação:
 ```
 mvn exec:java -Dexec.mainClass="com.acme.seguro.cotacoes.CotacoesApplication"
 ```
