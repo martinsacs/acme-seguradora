@@ -1,7 +1,6 @@
 package com.acme.seguro.cotacoes.config;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +18,9 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
@@ -104,13 +105,13 @@ public class ConsultaCatalogoMockServerConfig {
         }};
     }
 
-    public static List<CoberturaEntity> generateCoverages() {
-        return List.of(
-                new CoberturaEntity("Incêndio", BigDecimal.valueOf(500_000.00)),
-                new CoberturaEntity("Desastres naturais", BigDecimal.valueOf(600_000.00)),
-                new CoberturaEntity("Responsabilidade civil", BigDecimal.valueOf(80_000.00)),
-                new CoberturaEntity("Roubo", BigDecimal.valueOf(100_000.00))
-        );
+    public static Map<String, BigDecimal> generateCoverages() {
+        Map<String, BigDecimal> coverages = new HashMap<>();
+        coverages.put("Incêndio", BigDecimal.valueOf(500_000.00));
+        coverages.put("Desastres naturais", BigDecimal.valueOf(600_000.00));
+        coverages.put("Responsabilidade civil", BigDecimal.valueOf(80_000.00));
+        coverages.put("Roubo", BigDecimal.valueOf(100_000.00));
+        return coverages;
     }
 
 }

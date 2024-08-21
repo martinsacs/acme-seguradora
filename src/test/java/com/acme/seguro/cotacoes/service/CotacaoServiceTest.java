@@ -2,14 +2,11 @@ package com.acme.seguro.cotacoes.service;
 
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.acme.seguro.cotacoes.model.db.CotacaoSeguroEntity;
 import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacaoInput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
 import com.acme.seguro.cotacoes.repository.CotacaoSeguroRepository;
-import com.acme.seguro.cotacoes.service.ConsultaCatalogoService;
-import com.acme.seguro.cotacoes.service.CotacaoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static com.acme.seguro.cotacoes.config.ConsultaCatalogoMockServerConfig.generateCoverages;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,12 +46,12 @@ class CotacaoServiceTest {
 
 	@Test
 	void testCotar_Success() {
-		SolicitacaoCotacaoInput solicitacao = gerarObjetoSolicitacao(BigDecimal.valueOf(100), BigDecimal.ZERO, Collections.emptyList(), Collections.emptyList());
+		SolicitacaoCotacaoInput solicitacao = gerarObjetoSolicitacao(BigDecimal.valueOf(100), BigDecimal.ZERO, Collections.emptyMap(), Collections.emptyList());
 
 		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
 		produtoOutput.setActive(true);
 
-		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyList(), Collections.emptyList());
+		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyMap(), Collections.emptyList());
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
 		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
@@ -123,7 +121,7 @@ class CotacaoServiceTest {
 		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
 		produtoOutput.setActive(false);
 
-		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyList(), Collections.emptyList());
+		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyMap(), Collections.emptyList());
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
 		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
@@ -144,7 +142,7 @@ class CotacaoServiceTest {
 		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
 		produtoOutput.setActive(true);
 
-		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(false, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyList(), Collections.emptyList());
+		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(false, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyMap(), Collections.emptyList());
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
 		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
@@ -165,7 +163,7 @@ class CotacaoServiceTest {
 		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
 		produtoOutput.setActive(false);
 
-		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(false, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyList(), Collections.emptyList());
+		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(false, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyMap(), Collections.emptyList());
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
 		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
@@ -179,12 +177,12 @@ class CotacaoServiceTest {
 
 	@Test
 	void testCotar_ValidationValoresPremioMensalInvalidosError() {
-		SolicitacaoCotacaoInput	solicitacao = gerarObjetoSolicitacao(BigDecimal.valueOf(200), BigDecimal.valueOf(1000), Collections.emptyList(), Collections.emptyList());
+		SolicitacaoCotacaoInput	solicitacao = gerarObjetoSolicitacao(BigDecimal.valueOf(200), BigDecimal.valueOf(1000), Collections.emptyMap(), Collections.emptyList());
 
 		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
 		produtoOutput.setActive(true);
 
-		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyList(), Collections.emptyList());
+		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyMap(), Collections.emptyList());
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
 		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
@@ -217,12 +215,12 @@ class CotacaoServiceTest {
 
 	@Test
 	void testCotar_ValidationAssistenciasNaoAtendidasError() {
-		SolicitacaoCotacaoInput solicitacao = gerarObjetoSolicitacao(BigDecimal.valueOf(100), BigDecimal.ZERO, Collections.emptyList(), Arrays.asList("Assistência Funerária"));
+		SolicitacaoCotacaoInput solicitacao = gerarObjetoSolicitacao(BigDecimal.valueOf(100), BigDecimal.ZERO, Collections.emptyMap(), Arrays.asList("Assistência Funerária"));
 
 		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
 		produtoOutput.setActive(true);
 
-		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyList(), Arrays.asList("Chaveiro 24h"));
+		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyMap(), Arrays.asList("Chaveiro 24h"));
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
 		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
@@ -241,7 +239,7 @@ class CotacaoServiceTest {
 		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
 		produtoOutput.setActive(true);
 
-		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyList(), Arrays.asList("Chaveiro 24h"));
+		ConsultaOfertaOutput ofertaOutput = gerarObjetoConsultaOferta(true, new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)), Collections.emptyMap(), Arrays.asList("Chaveiro 24h"));
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
 		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
@@ -253,7 +251,7 @@ class CotacaoServiceTest {
 		assertTrue(response.getBody().toString().contains("coberturas exigidas"));
 	}
 
-	private SolicitacaoCotacaoInput gerarObjetoSolicitacao(BigDecimal totalMonthlyPremiumAmount, BigDecimal totalCoverageAmount, List<CoberturaEntity> coverages, List<String> assistencias) {
+	private SolicitacaoCotacaoInput gerarObjetoSolicitacao(BigDecimal totalMonthlyPremiumAmount, BigDecimal totalCoverageAmount, Map<String, BigDecimal> coverages, List<String> assistencias) {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -263,7 +261,7 @@ class CotacaoServiceTest {
 		solicitacao.setAssistances(assistencias);
 		return solicitacao;
 	}
-	private ConsultaOfertaOutput gerarObjetoConsultaOferta(Boolean active, MonthlyPremiumAmount monthlyPremiumAmount, List<CoberturaEntity> coverages, List<String> assistances) {
+	private ConsultaOfertaOutput gerarObjetoConsultaOferta(Boolean active, MonthlyPremiumAmount monthlyPremiumAmount, Map<String, BigDecimal> coverages, List<String> assistances) {
 		ConsultaOfertaOutput ofertaOutput = new ConsultaOfertaOutput();
 		ofertaOutput.setActive(active);
 		ofertaOutput.setMonthlyPremiumAmount(monthlyPremiumAmount);

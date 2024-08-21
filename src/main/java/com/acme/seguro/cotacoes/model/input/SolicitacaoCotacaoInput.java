@@ -1,13 +1,13 @@
 package com.acme.seguro.cotacoes.model.input;
 
 import com.acme.seguro.cotacoes.model.db.CustomerEntity;
-import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Data
@@ -33,7 +33,7 @@ public class SolicitacaoCotacaoInput {
     private BigDecimal totalCoverageAmount;
 
     @JsonProperty("coverages")
-    private List<CoberturaEntity> coverages;
+    private Map<String, BigDecimal> coverages;
 
     private List<String> assistances;
 

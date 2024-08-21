@@ -1,11 +1,13 @@
 package com.acme.seguro.cotacoes.model.db;
 
+import com.acme.seguro.cotacoes.utils.JsonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Entity
 @Data
@@ -27,15 +29,19 @@ public class CotacaoSeguroEntity {
 
     private BigDecimal totalCoverageAmount;
 
-    @OneToMany
-    private List<CoberturaEntity> coverages;
+    @JsonIgnore
+    @Column(name = "coverages", columnDefinition = "TEXT")
+    private String coveragesJson;
+
+    @Transient
+    private Map<String, BigDecimal> coverages;
 
     private List<String> assistances;
 
     @OneToOne
     private CustomerEntity customer;
 
-    public CotacaoSeguroEntity(String productId, String offerId, String category, BigDecimal totalMonthlyPremiumAmount, BigDecimal totalCoverageAmount, List<CoberturaEntity> coverages, List<String> assistances, CustomerEntity customer) {
+    public CotacaoSeguroEntity(String productId, String offerId, String category, BigDecimal totalMonthlyPremiumAmount, BigDecimal totalCoverageAmount, Map<String, BigDecimal> coverages, List<String> assistances, CustomerEntity customer) {
         this.productId = productId;
         this.offerId = offerId;
         this.category = category;
@@ -48,5 +54,16 @@ public class CotacaoSeguroEntity {
 
     public CotacaoSeguroEntity() {
 
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void convertCoveragesToJson() throws JsonProcessingException {
+        this.coveragesJson = JsonUtils.convertMapToJson(this.coverages);
+    }
+
+    @PostLoad
+    private void convertJsonToCoverages() throws JsonProcessingException, JsonProcessingException {
+        this.coverages = JsonUtils.convertJsonToMap(this.coveragesJson);
     }
 }

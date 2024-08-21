@@ -1,12 +1,13 @@
 package com.acme.seguro.cotacoes.model.output.mock;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ConsultaOfertaOutput {
@@ -22,7 +23,7 @@ public class ConsultaOfertaOutput {
 
     private Boolean active;
 
-    private List<CoberturaEntity> coverages;
+    private Map<String, BigDecimal> coverages;
 
     private List<String> assistances;
 

@@ -1,13 +1,11 @@
 package com.acme.seguro.cotacoes.service;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
-import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.acme.seguro.cotacoes.model.db.CotacaoSeguroEntity;
 import com.acme.seguro.cotacoes.model.db.CustomerEntity;
 import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacaoInput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
-import com.acme.seguro.cotacoes.repository.CoberturaRepository;
 import com.acme.seguro.cotacoes.repository.CotacaoSeguroRepository;
 import com.acme.seguro.cotacoes.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +30,6 @@ public class CotacaoService {
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @Autowired
-    private CoberturaRepository coberturaRepository;
 
     public ResponseEntity cotar(SolicitacaoCotacaoInput solicitacao, UriComponentsBuilder uriBuilder) {
         try {
@@ -98,14 +93,14 @@ public class CotacaoService {
                 responseOferta.getBody().getActive();
     }
 
-    private static boolean coberturasValidas(List<CoberturaEntity> coberturaEsperada, List<CoberturaEntity> coberturaReal) {
-        for (CoberturaEntity cobertura : coberturaEsperada) {
-            CoberturaEntity coberturaCorrespondente = coberturaReal.stream()
-                    .filter(c -> c.getDescricao().equals(cobertura.getDescricao()))
-                    .findFirst()
-                    .orElse(null);
+    private static boolean coberturasValidas(Map<String, BigDecimal> coberturaEsperada, Map<String, BigDecimal> coberturaReal) {
+        for (Map.Entry<String, BigDecimal> entry : coberturaEsperada.entrySet()) {
+            String descricao = entry.getKey();
+            BigDecimal valorEsperado = entry.getValue();
 
-            if (coberturaCorrespondente == null || cobertura.getValor().compareTo(coberturaCorrespondente.getValor()) > 0) {
+            BigDecimal valorReal = coberturaReal.get(descricao);
+
+            if (valorReal == null || valorEsperado.compareTo(valorReal) > 0) {
                 return false;
             }
         }
@@ -129,26 +124,23 @@ public class CotacaoService {
                 valoresOferta.getMaxAmount().compareTo(valoresCotacao) == 1;
     }
 
-    private static boolean valorTotalCoberturasValido(List<CoberturaEntity> coverages, BigDecimal totalCoverageAmount) {
+    private static boolean valorTotalCoberturasValido(Map<String, BigDecimal> coverages, BigDecimal totalCoverageAmount) {
         return somarValores(coverages).compareTo(totalCoverageAmount) == 0;
     }
-    public static BigDecimal somarValores(List<CoberturaEntity> coberturas) {
+    private static BigDecimal somarValores(Map<String, BigDecimal> coberturas) {
         BigDecimal soma = BigDecimal.ZERO;
 
-        for(CoberturaEntity cobertura : coberturas) {
-            soma = soma.add(cobertura.getValor());
+        for (BigDecimal valor : coberturas.values()) {
+            soma = soma.add(valor);
         }
 
         return soma;
     }
 
     private ResponseEntity<CotacaoSeguroEntity> persistirBanco(SolicitacaoCotacaoInput solicitacao, UriComponentsBuilder uriBuilder) {
-        for(CoberturaEntity cobertura : solicitacao.getCoverages()) {
-            coberturaRepository.save(cobertura);
+        if(solicitacao.getCustomer() != null) {
+            customerRepository.save(solicitacao.getCustomer());
         }
-
-        CustomerEntity customer = solicitacao.getCustomer();
-        customerRepository.save(customer);
 
         CotacaoSeguroEntity cotacao = deParaSolicitacaoCotacaoDb(solicitacao);
         cotacaoSeguroRepository.save(cotacao);
