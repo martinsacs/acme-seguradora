@@ -1,4 +1,4 @@
-package com.acme.seguro.cotacoes;
+package com.acme.seguro.cotacoes.service;
 
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;

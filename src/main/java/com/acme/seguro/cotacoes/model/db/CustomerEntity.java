@@ -31,4 +31,7 @@ public class CustomerEntity {
 
     @JsonProperty("phone_number")
     private String phoneNumber;
+
+    public CustomerEntity() {
+    }
 }

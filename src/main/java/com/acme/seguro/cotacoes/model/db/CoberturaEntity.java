@@ -21,4 +21,7 @@ public class CoberturaEntity {
         this.descricao = descricao;
         this.valor = valor;
     }
+
+    public CoberturaEntity() {
+    }
 }

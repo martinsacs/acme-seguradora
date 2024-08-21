@@ -3,10 +3,12 @@ package com.acme.seguro.cotacoes.service;
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
 import com.acme.seguro.cotacoes.model.db.CoberturaEntity;
 import com.acme.seguro.cotacoes.model.db.CotacaoSeguroEntity;
+import com.acme.seguro.cotacoes.model.db.CustomerEntity;
 import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacaoInput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
 import com.acme.seguro.cotacoes.repository.CotacaoSeguroRepository;
+import com.acme.seguro.cotacoes.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,9 @@ public class CotacaoService {
 
     @Autowired
     private CotacaoSeguroRepository cotacaoSeguroRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public ResponseEntity cotar(SolicitacaoCotacaoInput solicitacao, UriComponentsBuilder uriBuilder) {
         try {
@@ -127,7 +132,7 @@ public class CotacaoService {
         BigDecimal soma = BigDecimal.ZERO;
 
         for(CoberturaEntity cobertura : coberturas) {
-            soma.add(cobertura.getValor());
+            soma = soma.add(cobertura.getValor());
         }
 
         return soma;
@@ -136,6 +141,9 @@ public class CotacaoService {
     private ResponseEntity<CotacaoSeguroEntity> persistirBanco(SolicitacaoCotacaoInput solicitacao, UriComponentsBuilder uriBuilder) {
         CotacaoSeguroEntity cotacao = deParaSolicitacaoCotacaoDb(solicitacao);
         cotacaoSeguroRepository.save(cotacao);
+
+        CustomerEntity customer = solicitacao.getCustomer();
+        customerRepository.save(customer);
 
         URI uri = uriBuilder.path("/solicitacoes-cotacao/{id}").buildAndExpand(cotacao.getId()).toUri();
         return ResponseEntity.created(uri).body(cotacao);
