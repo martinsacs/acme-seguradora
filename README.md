@@ -130,8 +130,12 @@ cd acme-seguradora
 
 2. Abra o arquivo pom.xml como projeto no IDE de sua preferência (recomendamos IntelliJ)
 
-3. Execute o comando para compilar o projeto:
+3. Execute o comando abaixo para compilar o projeto:
 ```
 maven clean install
 ```
 
+4. Digite a instrução abaixo para executar a aplicação:
+```
+mvn exec:java -Dexec.mainClass="com.acme.seguro.cotacoes.CotacoesApplication"
+```
