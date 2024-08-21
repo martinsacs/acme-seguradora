@@ -144,6 +144,9 @@ mvn test
 ```
 mvn spring-boot:run -Dspring-boot.run.mainClass=com.acme.seguro.cotacoes.CotacoesApplication
 ```
+### Execução local
+Para rodar a aplicação localmente, é necessário executar também a aplicação (mock) de consulta de catálogo de produtos e ofertas. \
+Acesse o repositório do mock server aqui: [mockserver-consulta-catalogo](https://github.com/martinsacs/mockserver-consulta-catalogo).
 
 ### Collection
 Temos as requisições prontas para que você possa realizar as chamadas aos endpoints. \
