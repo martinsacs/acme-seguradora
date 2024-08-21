@@ -156,11 +156,27 @@ Baixe nossa coleção de requests do *Insomnia* na pasta **src/test**.
 Ao final da solicitação de cotação, uma mensagem é postada no Kafka. \
 Para que você consiga testar todo o fluxo, você precisará rodar o Kafka localmente. \
 
-Configure o ambiente rodando o arquivo **docker-compose.yml** localizado na pasta inicial do repositório. \
+1. Configure o ambiente rodando o arquivo **docker-compose.yml** localizado na pasta inicial do repositório. \
 Para isso, execute o comando:
 ```
-docker-compose up
+docker-compose up -d
 ```
+2. Assim que o docker finalizar as configurações, verifique se os containers estão executando:
+```
+docker ps
+```
+
+3. Crie o tópico:
+```
+docker exec -it kafka kafka-topics.sh --create --topic topico-cotacoes_seguro --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+```
+
+4. Consuma as mensagens produzidas:
+```
+docker exec -it kafka kafka-console-consumer.sh --topic topico-cotacoes_seguro --bootstrap-server localhost:9092 --from-beginning
+```
+
+Obs: Utilize "winpty" antes do comando caso esteja utilizando o GitBash como terminal.
 
 **Mas se preferir...**
 
@@ -171,17 +187,18 @@ Siga as etapas:
 ```
 bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
-4. Abra outro terminel e digite o comando a seguir para iniciar o broker:
+4. Abra outro terminal e digite o comando a seguir para iniciar o broker:
 ```
 bin/kafka-server-start.sh config/server.properties
 ```
 
+
+**Por fim**
 5. Execute o comando a seguir para criar o tópico:
 ```
 bin/kafka-topics.sh --create --topic topico-cotacoes_seguro --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 ```
-
-Para consultar as mensagens produzidas, utilize:
+6. Para consultar as mensagens produzidas, utilize:
 ```
-bin/kafka-console-consumer.sh --topic meu_topico --bootstrap-server localhost:9092 --from-beginning
+bin/kafka-console-consumer.sh --topic topico-cotacoes_seguro --bootstrap-server localhost:9092 --from-beginning
 ```
