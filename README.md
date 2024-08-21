@@ -142,5 +142,5 @@ mvn test
 
 5. Digite a instrução abaixo para executar a aplicação:
 ```
-mvn exec:java -Dexec.mainClass="com.acme.seguro.cotacoes.CotacoesApplication"
+mvn spring-boot:run -Dspring-boot.run.mainClass=com.acme.seguro.cotacoes.CotacoesApplication
 ```
