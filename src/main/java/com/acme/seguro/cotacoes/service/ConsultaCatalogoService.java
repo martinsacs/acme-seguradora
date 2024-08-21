@@ -18,26 +18,26 @@ public class ConsultaCatalogoService {
     private ObjectMapper objectMapper;
 
     public ResponseEntity consultarProduto(String productId) {
-        String url = "http://localhost:8081/v1/consulta-produto/{product_id}";
+        String url = "http://localhost:8081/v1/produtos/{product_id}";
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, productId);
             ConsultaProdutoOutput produtoOutput = objectMapper.readValue(response.getBody(), ConsultaProdutoOutput.class);
             return new ResponseEntity<>(produtoOutput, response.getStatusCode());
         } catch (Exception ex){
-            System.out.println("ERRO: Não foi possível consultar o catálogo de produtos.");
+            System.out.println("ERRO: Não foi possível consultar o catálogo de produtos. Verifique se o serviço de consulta está em execução.");
             return new ResponseEntity<>("ERRO: Não foi possível consultar o catálogo de produtos.", HttpStatusCode.valueOf(500));
         }
 
     }
 
     public ResponseEntity consultarOferta(String offerId) {
-        String url = "http://localhost:8081/v1/consulta-oferta/{offer_id}";
+        String url = "http://localhost:8081/v1/ofertas/{offer_id}";
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, offerId);
             ConsultaOfertaOutput ofertaOutput = objectMapper.readValue(response.getBody(), ConsultaOfertaOutput.class);
             return new ResponseEntity<>(ofertaOutput, response.getStatusCode());
         } catch (Exception ex) {
-            System.out.println("ERRO: Não foi possível consultar o catálogo de ofertas.");
+            System.out.println("ERRO: Não foi possível consultar o catálogo de ofertas. Verifique se o serviço de consulta está em execução.");
             return new ResponseEntity<>("ERRO: Não foi possível consultar o catálogo de ofertas.", HttpStatusCode.valueOf(500));
         }
     }

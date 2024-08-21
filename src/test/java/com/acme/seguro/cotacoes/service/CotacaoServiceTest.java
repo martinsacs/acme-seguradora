@@ -17,12 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static com.acme.seguro.cotacoes.config.ConsultaCatalogoMockServerConfig.generateCoverages;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -268,5 +264,14 @@ class CotacaoServiceTest {
 		ofertaOutput.setCoverages(coverages);
 		ofertaOutput.setAssistances(assistances);
 		return ofertaOutput;
+	}
+
+	public static Map<String, BigDecimal> generateCoverages() {
+		Map<String, BigDecimal> coverages = new HashMap<>();
+		coverages.put("Incêndio", BigDecimal.valueOf(500_000.00));
+		coverages.put("Desastres naturais", BigDecimal.valueOf(600_000.00));
+		coverages.put("Responsabilidade civil", BigDecimal.valueOf(80_000.00));
+		coverages.put("Roubo", BigDecimal.valueOf(100_000.00));
+		return coverages;
 	}
 }
