@@ -154,7 +154,7 @@ Baixe nossa coleção de requests do *Insomnia* na pasta **src/test**.
 
 ### Configure o Kafka
 Ao final da solicitação de cotação, uma mensagem é postada no Kafka. \
-Para que você consiga testar todo o fluxo, você precisará rodar o Kafka localmente. \
+Para que você consiga testar todo o fluxo, você precisará rodar o Kafka localmente.
 
 Configure o ambiente rodando o arquivo **docker-compose.yml** localizado na pasta inicial do repositório. \
 Para isso, execute o comando:
