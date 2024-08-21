@@ -146,5 +146,4 @@ mvn spring-boot:run -Dspring-boot.run.mainClass=com.acme.seguro.cotacoes.Cotacoe
 ```
 
 ### Collection
-Temos as requisições prontas para que você possa realizar as chamadas aos endpoints.
-Baixe nossa coleção de requests do *Insomnia* na pasta **src/test**.
+Temos as requisições prontas para que você possa realizar as chamadas aos endpoints.\Baixe nossa coleção de requests do *Insomnia* na pasta **src/test**.
