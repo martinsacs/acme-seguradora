@@ -4,7 +4,14 @@ Este projeto é uma aplicação de cotação de seguros desenvolvida em Java uti
 
 ## Arquitetura
 
-### Arquitetura Utilizada
+### Ferramentas
+Essa solução utiliza: 
+- **Linguagem:** Java 17
+- **Gerenciamento de depêndencias e build:** Maven
+- **Framework(s):** Spring
+- **Mensageria:** Apache Kafka
+
+### Arquitetura utilizada
 
 A arquitetura utilizada neste projeto é a arquitetura de microsserviços. Cada serviço é responsável por uma funcionalidade específica e se comunica com outros serviços através de APIs REST.
 
@@ -20,7 +27,7 @@ A escolha da arquitetura de microsserviços foi feita com base nos seguintes pon
 
 ## Endpoints v1
 
-### `/v1/solicitacoes-cotacao`
+### `POST /v1/solicitacoes-cotacao`
 Realiza a cotação de seguro com base nos dados fornecidos.
 
 - **Request Body**: `SolicitacaoCotacaoInput` (mais detalhe na seção **Modelos**)
@@ -37,9 +44,9 @@ Consulta informações de uma cotação específica.
 - **Path Variable**: `id_cotacao` (ID da cotação)
 - **Response**: `ResponseEntity<CotacaoSeguroEntity>` com os detalhes da cotação.
 
-## Estrutura do Projeto
+## Estrutura do projeto
 
-### Pacotes Principais
+### Pacotes principais
 
 #### `com.acme.seguro.cotacoes`
 Pacote raiz do projeto que contém as classes principais e de configuração.
@@ -74,7 +81,7 @@ Contém classes utilitárias usadas em toda a aplicação.
 #### `com.acme.seguro.cotacoes.test`
 Contém as classes de testes unitários.
 
-### Classes Principais
+### Classes principais
 
 #### `CotacaoService`
 Classe responsável por calcular a cotação de seguros. Ela valida a solicitação de cotação, consulta produtos e ofertas, e persiste os dados no banco de dados.
@@ -113,7 +120,7 @@ Classe de testes de integração para `ConsultaCatalogoService`. Utiliza WireMoc
 - Java 11 ou superior
 - Maven 3.6 ou superior
 
-### Passos para Configuração
+### Como executar
 
 1. Clone o repositório:
    ˋˋˋgit clone https://github.com/martinsacs/acme-seguradora.git
