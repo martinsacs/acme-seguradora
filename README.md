@@ -151,3 +151,37 @@ Acesse o repositório do mock server aqui: [mockserver-consulta-catalogo](https:
 ### Collection
 Temos as requisições prontas para que você possa realizar as chamadas aos endpoints. \
 Baixe nossa coleção de requests do *Insomnia* na pasta **src/test**.
+
+### Configure o Kafka
+Ao final da solicitação de cotação, uma mensagem é postada no Kafka. \
+Para que você consiga testar todo o fluxo, você precisará rodar o Kafka localmente. \
+
+Configure o ambiente rodando o arquivo **docker-compose.yml** localizado na pasta inicial do repositório. \
+Para isso, execute o comando:
+```
+docker-compose up
+```
+
+**Mas se preferir...**
+
+Siga as etapas:
+1. Acesse o site oficial do Apache Kafka e baixe a versão mais recente: [Apache Kafka Downloads](https://kafka.apache.org/downloads);
+2. Extraia o arquivo baixado;
+3. Navegue até o diretório da pasta gerada e inicie o zookeper:
+```
+bin/zookeeper-server-start.sh config/zookeeper.properties
+```
+4. Abra outro terminel e digite o comando a seguir para iniciar o broker:
+```
+bin/kafka-server-start.sh config/server.properties
+```
+
+5. Execute o comando a seguir para criar o tópico:
+```
+bin/kafka-topics.sh --create --topic topico-cotacoes_seguro --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+```
+
+Para consultar as mensagens produzidas, utilize:
+```
+bin/kafka-console-consumer.sh --topic meu_topico --bootstrap-server localhost:9092 --from-beginning
+```

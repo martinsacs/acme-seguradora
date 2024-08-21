@@ -2,12 +2,13 @@ package com.acme.seguro.cotacoes.service;
 
 import com.acme.seguro.cotacoes.model.MonthlyPremiumAmount;
 import com.acme.seguro.cotacoes.model.db.CotacaoSeguroEntity;
-import com.acme.seguro.cotacoes.model.db.CustomerEntity;
 import com.acme.seguro.cotacoes.model.input.SolicitacaoCotacaoInput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaOfertaOutput;
 import com.acme.seguro.cotacoes.model.output.mock.ConsultaProdutoOutput;
+import com.acme.seguro.cotacoes.producer.CotacaoKafkaProducer;
 import com.acme.seguro.cotacoes.repository.CotacaoSeguroRepository;
 import com.acme.seguro.cotacoes.repository.CustomerRepository;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,9 @@ public class CotacaoService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private CotacaoKafkaProducer cotacaoKafkaProducer;
+
     public ResponseEntity cotar(SolicitacaoCotacaoInput solicitacao, UriComponentsBuilder uriBuilder) {
         try {
             ResponseEntity<ConsultaProdutoOutput> responseProduto = consultaCatalogoService.consultarProduto(solicitacao.getProductId());
@@ -41,8 +45,7 @@ public class CotacaoService {
 
                 if (validationResult.containsValue(200)) {
                     ResponseEntity<CotacaoSeguroEntity> response = persistirBanco(solicitacao, uriBuilder);
-
-                    // postar no kafka
+                    cotacaoKafkaProducer.sendMessage("Nova cotação de seguro disponível! (" + response.getBody().getId() + ")");
                     return response;
                 } else {
                     String errorMessage = validationResult.keySet().iterator().next();
