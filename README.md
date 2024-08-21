@@ -2,6 +2,41 @@
 
 Este projeto é uma aplicação de cotação de seguros desenvolvida em Java utilizando Spring Boot e Maven. Ele inclui serviços para consultar produtos e ofertas, calcular cotações e realizar testes unitários.
 
+## Arquitetura
+
+### Arquitetura Utilizada
+
+A arquitetura utilizada neste projeto é a arquitetura de microsserviços. Cada serviço é responsável por uma funcionalidade específica e se comunica com outros serviços através de APIs REST.
+
+### Justificativa
+
+A escolha da arquitetura de microsserviços foi feita com base nos seguintes pontos:
+
+- **Escalabilidade**: Permite escalar individualmente cada serviço conforme a demanda.
+- **Manutenibilidade**: Facilita a manutenção e evolução do sistema, pois cada serviço pode ser desenvolvido, testado e implantado de forma independente.
+- **Desempenho**: Melhora o desempenho ao permitir que serviços críticos sejam otimizados e escalados separadamente.
+- **Flexibilidade**: Permite a utilização de diferentes tecnologias e frameworks para cada serviço, conforme a necessidade.
+
+
+## Endpoints v1
+
+### `/v1/solicitacoes-cotacao`
+Realiza a cotação de seguro com base nos dados fornecidos.
+
+- **Request Body**: `SolicitacaoCotacaoInput` (mais detalhe na seção **Modelos**)
+- **Response**: `ResponseEntity` com o status da operação e detalhes da cotação.
+
+### `GET /v1/solicitacoes-cotacao`
+Consulta todas as cotações existentes no banco de dados.
+
+- **Response**: `ResponseEntity<List<CotacaoSeguroEntity>>` com os detalhes de todas as cotações.
+
+### `GET /v1/solicitacoes-cotacao/{id_cotacao}`
+Consulta informações de uma cotação específica.
+
+- **Path Variable**: `id_cotacao` (ID da cotação)
+- **Response**: `ResponseEntity<CotacaoSeguroEntity>` com os detalhes da cotação.
+
 ## Estrutura do Projeto
 
 ### Pacotes Principais
@@ -81,11 +116,11 @@ Classe de testes de integração para `ConsultaCatalogoService`. Utiliza WireMoc
 ### Passos para Configuração
 
 1. Clone o repositório:
-   ~~~git clone https://github.com/martinsacs/acme-seguradora.git
-   cd acme-seguradora~~~
+   ˋˋˋgit clone https://github.com/martinsacs/acme-seguradora.git
+   cd acme-seguradoraˋˋˋ
 
 2. Abra o arquivo pom.xml como projeto no IDE de sua preferência (recomendamos IntelliJ)
 
 3. Execute o comando para compilar o projeto:
-   ~~~maven clean install~~~
+   ˋˋˋmaven clean installˋˋˋ
 
