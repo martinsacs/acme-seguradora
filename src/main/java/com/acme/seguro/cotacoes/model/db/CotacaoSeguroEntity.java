@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Entity
 @Data
+@Table(name="tb_cotacoes")
 public class CotacaoSeguroEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

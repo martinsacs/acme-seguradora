@@ -1,14 +1,12 @@
 package com.acme.seguro.cotacoes.model.db;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Entity
+@Table(name="tb_coberturas")
 @Data
 public class CoberturaEntity {
     @Id
