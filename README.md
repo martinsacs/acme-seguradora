@@ -123,15 +123,15 @@ Classe de testes de integração para `ConsultaCatalogoService`. Utiliza WireMoc
 ### Como executar
 
 1. Clone o repositório:
-   ˋˋˋ
-   git clone https://github.com/martinsacs/acme-seguradora.git
-   cd acme-seguradora
-   ˋˋˋ
+```
+git clone https://github.com/martinsacs/acme-seguradora.git
+cd acme-seguradora
+```
 
 2. Abra o arquivo pom.xml como projeto no IDE de sua preferência (recomendamos IntelliJ)
 
 3. Execute o comando para compilar o projeto:
-   ˋˋˋ
-   maven clean install
-   ˋˋˋ
+```
+maven clean install
+```
 
