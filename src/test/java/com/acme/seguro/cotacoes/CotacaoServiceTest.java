@@ -20,10 +20,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static com.acme.seguro.cotacoes.config.ConsultaCatalogoMockServerConfig.generateCoverages;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -73,7 +75,7 @@ class CotacaoServiceTest {
 	}
 
 	@Test
-	void testCotar_inexistentProductAndOffer() {
+	void testCotar_inexistentProductAndOfferError() {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -85,9 +87,11 @@ class CotacaoServiceTest {
 		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("inexistente(s) e/ou inativo(s)"));
 	}
+
 	@Test
-	void testCotar_inexistentProduct() {
+	void testCotar_inexistentProductError() {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -99,10 +103,11 @@ class CotacaoServiceTest {
 		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("inexistente(s) e/ou inativo(s)"));
 	}
 
 	@Test
-	void testCotar_inexistentOffer() {
+	void testCotar_inexistentOfferError() {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -114,9 +119,12 @@ class CotacaoServiceTest {
 		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("inexistente(s) e/ou inativo(s)"));
+
 	}
+
 	@Test
-	void testCotar_inactiveProduct() {
+	void testCotar_inactiveProductError() {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -137,10 +145,11 @@ class CotacaoServiceTest {
 		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("inexistente(s) e/ou inativo(s)"));
 	}
 
 	@Test
-	void testCotar_inactiveOffer() {
+	void testCotar_inactiveOfferError() {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -161,9 +170,36 @@ class CotacaoServiceTest {
 		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("inexistente(s) e/ou inativo(s)"));
 	}
+
 	@Test
-	void testCotar_ValidationErrorValoresPremioMensalInvalidos() {
+	void testCotar_inactiveOfferAndProductError() {
+		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
+		solicitacao.setProductId("prod123");
+		solicitacao.setOfferId("offer123");
+
+		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
+		produtoOutput.setActive(false);
+
+		ConsultaOfertaOutput ofertaOutput = new ConsultaOfertaOutput();
+		ofertaOutput.setActive(false);
+		ofertaOutput.setMonthlyPremiumAmount(new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)));
+		ofertaOutput.setCoverages(Collections.emptyList());
+		ofertaOutput.setAssistances(Collections.emptyList());
+
+		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
+		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
+
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
+		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("inexistente(s) e/ou inativo(s)"));
+	}
+
+	@Test
+	void testCotar_ValidationValoresPremioMensalInvalidosError() {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -188,10 +224,11 @@ class CotacaoServiceTest {
 		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("Valores de prêmio"));
 	}
 
 	@Test
-	void testCotar_ValidationErrorValoresCoberturasInvalidos() {
+	void testCotar_ValidationValoresCoberturasInvalidosError() {
 		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
 		solicitacao.setProductId("prod123");
 		solicitacao.setOfferId("offer123");
@@ -206,7 +243,7 @@ class CotacaoServiceTest {
 		ConsultaOfertaOutput ofertaOutput = new ConsultaOfertaOutput();
 		ofertaOutput.setActive(true);
 		ofertaOutput.setMonthlyPremiumAmount(new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)));
-		ofertaOutput.setCoverages(Collections.emptyList());
+		ofertaOutput.setCoverages(generateCoverages());
 		ofertaOutput.setAssistances(Collections.emptyList());
 
 		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
@@ -216,6 +253,64 @@ class CotacaoServiceTest {
 		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("valores de cobertura"));
 	}
 
+	@Test
+	void testCotar_ValidationAssistenciasNaoAtendidasError() {
+		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
+		solicitacao.setProductId("prod123");
+		solicitacao.setOfferId("offer123");
+		solicitacao.setTotalMonthlyPremiumAmount(BigDecimal.valueOf(100));
+		solicitacao.setTotalCoverageAmount(BigDecimal.ZERO);
+		solicitacao.setCoverages(Collections.emptyList());
+		solicitacao.setAssistances(Arrays.asList("Assistência Funerária"));
+
+		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
+		produtoOutput.setActive(true);
+
+		ConsultaOfertaOutput ofertaOutput = new ConsultaOfertaOutput();
+		ofertaOutput.setActive(true);
+		ofertaOutput.setMonthlyPremiumAmount(new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)));
+		ofertaOutput.setCoverages(Collections.emptyList());
+		ofertaOutput.setAssistances(Arrays.asList("Chaveiro 24h"));
+
+		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
+		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
+
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
+		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("assistências exigidas"));
+	}
+
+	@Test
+	void testCotar_ValidationCoberturasNaoAtendidasError() {
+		SolicitacaoCotacaoInput solicitacao = new SolicitacaoCotacaoInput();
+		solicitacao.setProductId("prod123");
+		solicitacao.setOfferId("offer123");
+		solicitacao.setTotalMonthlyPremiumAmount(BigDecimal.valueOf(100));
+		solicitacao.setTotalCoverageAmount(BigDecimal.ZERO);
+		solicitacao.setCoverages(generateCoverages());
+		solicitacao.setAssistances(Arrays.asList("Assistência Funerária"));
+
+		ConsultaProdutoOutput produtoOutput = new ConsultaProdutoOutput();
+		produtoOutput.setActive(true);
+
+		ConsultaOfertaOutput ofertaOutput = new ConsultaOfertaOutput();
+		ofertaOutput.setActive(true);
+		ofertaOutput.setMonthlyPremiumAmount(new MonthlyPremiumAmount(BigDecimal.valueOf(50), BigDecimal.valueOf(150), BigDecimal.valueOf(60)));
+		ofertaOutput.setCoverages(Collections.emptyList());
+		ofertaOutput.setAssistances(Arrays.asList("Chaveiro 24h"));
+
+		when(consultaCatalogoService.consultarProduto("prod123")).thenReturn(new ResponseEntity<>(produtoOutput, HttpStatus.OK));
+		when(consultaCatalogoService.consultarOferta("offer123")).thenReturn(new ResponseEntity<>(ofertaOutput, HttpStatus.OK));
+
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
+		ResponseEntity response = cotacaoService.cotar(solicitacao, uriBuilder);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertTrue(response.getBody().toString().contains("coberturas exigidas"));
+	}
 }
